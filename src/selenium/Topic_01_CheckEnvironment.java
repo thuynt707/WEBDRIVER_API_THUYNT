@@ -31,6 +31,11 @@ public class Topic_01_CheckEnvironment {
 		String homePageTitle = driver.getTitle();
 		Assert.assertEquals(homePageTitle, "Home page");
 	}
+	
+	@Test
+	public void TC_02() {
+		System.out.println("Test slack");
+	}
 
 	@AfterClass
 	public void afterClass() {

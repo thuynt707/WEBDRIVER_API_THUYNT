@@ -104,7 +104,6 @@ public class Topic_03_SeleniumWebDriverAPI {
 		} else {
 			dev.click();
 		}
-
 	}
 
 	@AfterClass

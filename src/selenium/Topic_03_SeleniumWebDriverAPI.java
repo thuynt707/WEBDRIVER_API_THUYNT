@@ -6,12 +6,27 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class Topic_03_SeleniumWebDriverAPI {
 	WebDriver driver;
+	By emailTextbox = By.xpath("//input[@id='mail']");
+	By under18Radio = By.xpath("//input[@id='under_18']");
+	By educationTextArea = By.xpath("//textarea[@id='edu']");
+	By jobRole01 = By.xpath("//select[@name='user_job1']");
+	By developmentCheckBox = By.xpath("//input[@id='development']");
+	By slider01 = By.xpath("//input[@id='slider-1']");
+	By buttonEnabled = By.xpath("//button[@id='button-enabled']");
+	By passwordTextBox = By.xpath("//input[@id='password']");
+	By radioButtonDisable = By.xpath("//input[@id='radio-disabled']");
+	By biography = By.xpath("//textarea[@id='bio']");
+	By jobRole02 = By.xpath("//select[@id='job2']");
+	By disabledCheckBox = By.xpath("//input[@id='check-disbaled']");
+	By slider02 = By.xpath("//input[@id='slider-2']");
+	By buttonDisabled = By.xpath("//button[@id='button-disabled']");
 
 	@BeforeClass
 	public void beforeClass() {
@@ -22,22 +37,19 @@ public class Topic_03_SeleniumWebDriverAPI {
 
 	// Check Email/ Age (Under 18)/ Education is displayed
 	@Test
-	public void TC_01_CheckDisplay() {
+	public void TC_01_CheckDisplay() throws Exception {
 		driver.get("https://daominhdam.github.io/basic-form/index.html");
-		WebElement email = driver.findElement(By.id("mail"));
-		if (email.isDisplayed()) {
-			email.sendKeys("Automation Testing");
+		if (isElementDisplayed(emailTextbox)) {
+			driver.findElement(emailTextbox).sendKeys("Automation testing");
+		}
+		if (isElementDisplayed(under18Radio)) {
+			driver.findElement(under18Radio).click();
+		}
+		if (isElementDisplayed(educationTextArea)) {
+			driver.findElement(educationTextArea).sendKeys("Automation testing");
 		}
 
-		WebElement ageUnder18 = driver.findElement(By.id("under_18"));
-		if (ageUnder18.isDisplayed()) {
-			ageUnder18.click();
-		}
-
-		WebElement education = driver.findElement(By.id("edu"));
-		if (education.isDisplayed()) {
-			education.sendKeys("Automation Testing");
-		}
+		Thread.sleep(3000);
 	}
 
 	// Check Email/ Age (Under 18)/ Education/ Job Role 01/ Interests (Development)/
@@ -45,64 +57,68 @@ public class Topic_03_SeleniumWebDriverAPI {
 	@Test
 	public void TC_02_CheckEnable() {
 		driver.get("https://daominhdam.github.io/basic-form/index.html");
-
-		WebElement email = driver.findElement(By.id("mail"));
-		if (email.isEnabled()) {
-			System.out.println("Email element is enabled");
-		}
-
-		WebElement ageUnder18 = driver.findElement(By.id("under_18"));
-		if (ageUnder18.isEnabled()) {
-			System.out.println("Age (Under 18) element is enabled");
-		}
-
-		WebElement education = driver.findElement(By.id("edu"));
-		if (education.isEnabled()) {
-			System.out.println("Education element is enabled");
-		}
-
-		WebElement job1 = driver.findElement(By.id("job1"));
-		if (job1.isEnabled()) {
-			System.out.println("Job Role 01 element is enabled");
-		}
-
-		WebElement dev = driver.findElement(By.id("development"));
-		if (dev.isEnabled()) {
-			System.out.println("Development element is enabled");
-		}
-
-		WebElement slider01 = driver.findElement(By.id("slider-1"));
-		if (slider01.isEnabled()) {
-			System.out.println("Slider 01 element is enabled");
-		}
-
-		WebElement buttonEnabled = driver.findElement(By.id("button-enabled"));
-		if (buttonEnabled.isEnabled()) {
-			System.out.println("ButtonEnabled element is enabled");
-		}
+		Assert.assertTrue(isElementEnabled(emailTextbox));
+		Assert.assertTrue(isElementEnabled(under18Radio));
+		Assert.assertTrue(isElementEnabled(educationTextArea));
+		Assert.assertTrue(isElementEnabled(jobRole01));
+		Assert.assertTrue(isElementEnabled(developmentCheckBox));
+		Assert.assertTrue(isElementEnabled(slider01));
+		Assert.assertTrue(isElementEnabled(buttonEnabled));
+		Assert.assertFalse(isElementEnabled(passwordTextBox));
+		Assert.assertFalse(isElementEnabled(radioButtonDisable));
+		Assert.assertFalse(isElementEnabled(biography));
+		Assert.assertFalse(isElementEnabled(jobRole02));
+		Assert.assertFalse(isElementEnabled(disabledCheckBox));
+		Assert.assertFalse(isElementEnabled(slider02));
+		Assert.assertFalse(isElementEnabled(buttonDisabled));
 	}
 
 	// Check Age (Under 18)/ Interests (Development) is selected
 	@Test
-	public void TC_03_CheckSelected() throws InterruptedException {
+	public void TC_03_CheckSelected() throws Exception {
 		driver.get("https://daominhdam.github.io/basic-form/index.html");
+		driver.findElement(under18Radio).click();
+		Thread.sleep(3000);
+		driver.findElement(developmentCheckBox).click();
+		Thread.sleep(3000);
+		Assert.assertTrue(isElementSelected(under18Radio));
+		Assert.assertTrue(isElementSelected(developmentCheckBox));
+		driver.findElement(developmentCheckBox).click();
+		Thread.sleep(3000);
+		Assert.assertFalse(isElementSelected(developmentCheckBox));
+	}
 
-		WebElement ageUnder18 = driver.findElement(By.id("under_18"));
-		ageUnder18.click();
-		Thread.sleep(2000);
-		if (ageUnder18.isSelected()) {
-			System.out.println("Age (Under 18) is selected");
+	public boolean isElementDisplayed(By by) {
+		WebElement element = driver.findElement(by);
+		if (element.isDisplayed()) {
+			System.out.println("Element: " + by + "is displayed!");
+			return true;
 		} else {
-			ageUnder18.click();
+			System.out.println("Element: " + by + "is not displayed!");
+			return false;
 		}
 
-		WebElement dev = driver.findElement(By.id("development"));
-		dev.click();
-		Thread.sleep(2000);
-		if (dev.isSelected()) {
-			System.out.println("Development element is selected");
+	}
+
+	public boolean isElementEnabled(By by) {
+		WebElement element = driver.findElement(by);
+		if (element.isEnabled()) {
+			System.out.println("Element: " + by + "is enabled!");
+			return true;
 		} else {
-			dev.click();
+			System.out.println("Element: " + by + "is disabled!");
+			return false;
+		}
+	}
+
+	public boolean isElementSelected(By by) {
+		WebElement element = driver.findElement(by);
+		if (element.isSelected()) {
+			System.out.println("Element: " + by + "is selected!");
+			return true;
+		} else {
+			System.out.println("Element: " + by + "is not selected!");
+			return false;
 		}
 	}
 

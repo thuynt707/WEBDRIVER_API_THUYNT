@@ -73,18 +73,15 @@ public class Topic_03_SeleniumWebDriverAPI {
 		Assert.assertFalse(isElementEnabled(buttonDisabled));
 	}
 
-	// Check Age (Under 18)/ Interests (Development) is selected
+	// Check selected for Age (Under 18)/ Interests (Development)
 	@Test
 	public void TC_03_CheckSelected() throws Exception {
 		driver.get("https://daominhdam.github.io/basic-form/index.html");
-		driver.findElement(under18Radio).click();
-		Thread.sleep(3000);
-		driver.findElement(developmentCheckBox).click();
-		Thread.sleep(3000);
+		checkToCheckbox(under18Radio);
+		checkToCheckbox(developmentCheckBox);
 		Assert.assertTrue(isElementSelected(under18Radio));
 		Assert.assertTrue(isElementSelected(developmentCheckBox));
-		driver.findElement(developmentCheckBox).click();
-		Thread.sleep(3000);
+		uncheckToCheckbox(developmentCheckBox);
 		Assert.assertFalse(isElementSelected(developmentCheckBox));
 	}
 
@@ -117,8 +114,22 @@ public class Topic_03_SeleniumWebDriverAPI {
 			System.out.println("Element: " + by + "is selected!");
 			return true;
 		} else {
-			System.out.println("Element: " + by + "is not selected!");
+			System.out.println("Element: " + by + "is de-selected!");
 			return false;
+		}
+	}
+
+	public void checkToCheckbox(By by) {
+		WebElement element = driver.findElement(by);
+		if (!element.isSelected()) {
+			element.click();
+		}
+	}
+
+	public void uncheckToCheckbox(By by) {
+		WebElement element = driver.findElement(by);
+		if (element.isSelected()) {
+			element.click();
 		}
 	}
 

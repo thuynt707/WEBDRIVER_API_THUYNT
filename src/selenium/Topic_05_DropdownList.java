@@ -112,11 +112,30 @@ public class Topic_05_DropdownList {
 		Assert.assertTrue(isElementDisplayed("//div[@class='btn-group']/li[contains(text(),'Second Option')]"));
 	}
 	
+	@Test
+	public void TC_06_CustomEditableDropdown() throws Exception {
+		driver.get("http://indrimuska.github.io/jquery-editable-select/");
+		
+		WebElement defaultTextbox = driver.findElement(By.xpath("//div[@id='default-place']/input"));
+		defaultTextbox.sendKeys("a");
+		selectItemInCustomDropdown("//div[@id='default-place']/input", "//div[@id='basic-place']//li", "Fiat");
+		Thread.sleep(2000);
+		//5: Check the item is selected successful
+		Assert.assertTrue(isElementDisplayed("//div[@id='default-place']/ul/li[@class='es-visible' and text() = 'Fiat']"));
+		
+		WebElement test = driver.findElement(By.xpath("//div[@id='default-place']/input"));
+		System.out.println("Text = " + test.getAttribute("value"));
+	}
 	
 	public void selectItemInCustomDropdown(String parentXpath, String allItemXpath, String expectedValueItem) throws Exception {
 		//1: Click into dropdown to show all item
 		WebElement parentDropdown = driver.findElement(By.xpath(parentXpath));
-		executorScript.executeScript("arguments[0].click();", parentDropdown);
+		if(parentDropdown.isDisplayed()){
+			parentDropdown.click();
+			}
+			else{
+				executorScript.executeScript("arguments[0].click();", parentDropdown);
+			}
 		
 		//2: Wait until all items are shown
 		waitExplicit.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(allItemXpath)));
@@ -125,6 +144,7 @@ public class Topic_05_DropdownList {
 		System.out.println("All element in dropdown list = " + allItems.size());
 		
 		for(WebElement childElement : allItems) {
+			System.out.println("Text moi lan get = " + childElement.getText());
 			if(childElement.getText().equals(expectedValueItem)) {
 				//3: Scroll to find expected item
 				executorScript.executeScript("arguments[0].scrollIntoView(true);", childElement);

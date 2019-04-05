@@ -115,20 +115,22 @@ public class Topic_05_DropdownList {
 	@Test
 	public void TC_06_CustomEditableDropdown() throws Exception {
 		driver.get("http://indrimuska.github.io/jquery-editable-select/");
-		
-		WebElement defaultTextbox = driver.findElement(By.xpath("//div[@id='default-place']/input"));
-		defaultTextbox.sendKeys("a");
-		selectItemInCustomDropdown("//div[@id='default-place']/input", "//div[@id='basic-place']//li", "Fiat");
-		Thread.sleep(2000);
-		//5: Check the item is selected successful
-		Assert.assertTrue(isElementDisplayed("//div[@id='default-place']/ul/li[@class='es-visible' and text() = 'Fiat']"));
-		
-		WebElement test = driver.findElement(By.xpath("//div[@id='default-place']/input"));
-		System.out.println("Text = " + test.getAttribute("value"));
+		driver.findElement(By.xpath("//div[@id='default-place']/input")).click();
+		List<WebElement> listCar = driver.findElements(By.xpath("//div[@id='default-place']//li"));
+		System.out.println("size = " + listCar.size());
+		for (WebElement car : listCar) {
+			System.out.println("list car is: " + car.getText());
+			if (car.getText().equals("Nissan")) {
+				Thread.sleep(1000);
+				car.click();
+				break;
+			}
+		}
+		Assert.assertTrue(isPresent(By.xpath("//div[@id='default-place']//li[@class='es-visible' and contains(text(),'Nissan')]")));
 	}
 	
 	public void selectItemInCustomDropdown(String parentXpath, String allItemXpath, String expectedValueItem) throws Exception {
-		//1: Click into dropdown to show all item
+		//1: Click into Dropdown to show all item
 		WebElement parentDropdown = driver.findElement(By.xpath(parentXpath));
 		if(parentDropdown.isDisplayed()){
 			parentDropdown.click();
@@ -148,14 +150,52 @@ public class Topic_05_DropdownList {
 			if(childElement.getText().equals(expectedValueItem)) {
 				//3: Scroll to find expected item
 				executorScript.executeScript("arguments[0].scrollIntoView(true);", childElement);
+				waitExplicit.until(ExpectedConditions.visibilityOf(childElement));
 				Thread.sleep(1000);
-				
-				//4: Click into item
-				childElement.click();
+				if (childElement.isDisplayed()) {
+					  childElement.click();
+				  } else {
+					  executorScript.executeScript("arguments[0].click();", childElement);
+				  }
 				Thread.sleep(1000);
 				break;
 			}
 		}	
+	}
+	
+	public void selectItemWithEditableDropdown(String parentXpath, String selectedItemsXpath, String itemFilteredInSearchSelectionXpath, String expectedItemValue) {
+		// Scroll to drop down then click
+		WebElement parentDropdown = driver.findElement(By.xpath(parentXpath));
+		executorScript.executeScript("arguments[0].click()", parentDropdown);
+
+		// Input text
+		parentDropdown.sendKeys(expectedItemValue);
+
+		String expectedItemXpath = itemFilteredInSearchSelectionXpath + expectedItemValue + "']";
+
+		// wait for matched text displayed
+		waitExplicit.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(expectedItemXpath)));
+
+		// Click chọn item mong muốn
+		WebElement expectedItem = driver.findElement(By.xpath(expectedItemXpath));
+		if (expectedItem.isDisplayed()) {
+			expectedItem.click();
+		} else {
+			System.out.println("Không tồn tại giá trị mong muốn trong dropdown!");
+		}
+
+		// Kiểm tra item đã được chọn chưa
+		waitExplicit.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
+				By.xpath("//div[@class='ui sub header' and text() = 'Search Selection']")));
+		WebElement selectedItem = driver.findElement(By.xpath(
+				"//div[@class='ui sub header' and text() = 'Search Selection']/following-sibling::div/child::a"));
+		System.out.println(expectedItemValue);
+		System.out.println(selectedItem.getText());
+		if (selectedItem.isDisplayed() && expectedItemValue.equals(selectedItem.getText())) {
+			System.out.println("Chọn giá trị cần chọn thành công!");
+		} else {
+			System.out.println("Chưa chọn được giá trị cần chọn");
+		}
 	}
 	
 	public boolean isElementDisplayed(String xpathValue) {
@@ -168,6 +208,18 @@ public class Topic_05_DropdownList {
 			return false;
 		}
 	}
+	
+	public boolean isPresent(By value) {
+		  
+		  if (driver.findElements(value).size()>0) 
+		  {
+			  return true;
+		  }
+		  else
+		  {
+			  return false;
+		  }
+	}	  
 
 	@AfterClass
 	public void afterClass() {

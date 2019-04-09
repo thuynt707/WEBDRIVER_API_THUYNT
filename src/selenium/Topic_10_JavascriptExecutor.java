@@ -1,6 +1,5 @@
 package selenium;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -10,10 +9,10 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+//import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 public class Topic_10_JavascriptExecutor {
@@ -72,8 +71,8 @@ public class Topic_10_JavascriptExecutor {
 	By confirmPasswordTextbox = By.xpath("//input[@id='confirmation']");
 	By registerBtn = By.xpath("//button[@title='Register']");
 
-	@BeforeClass
-	public void beforeClass() {
+	@BeforeTest
+	public void beforeTest() {
 		//driver = new FirefoxDriver();
 		System.setProperty("webdriver.chrome.driver", ".\\driver\\chromedriver.exe");
 		driver = new ChromeDriver();
@@ -226,8 +225,8 @@ public class Topic_10_JavascriptExecutor {
 		
 	}
 	
-	@AfterClass
-	public void afterClass() {
+	@AfterTest
+	public void afterTest() {
 		driver.quit();
 	}
 	public void highlightElement(WebElement element) {

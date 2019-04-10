@@ -50,16 +50,16 @@ public class Topic_11_UploadFile {
 	@BeforeTest
 	public void beforeTest() {
 		// Chrome
-		System.setProperty("webdriver.chrome.driver", ".\\driver\\chromedriver.exe");
-		driver = new ChromeDriver();
+//		System.setProperty("webdriver.chrome.driver", ".\\driver\\chromedriver.exe");
+//		driver = new ChromeDriver();
 
 		// Firefox
 //		System.setProperty("webdriver.gecko.driver", ".\\driver\\geckodriver.exe");
 //		driver = new FirefoxDriver();
 
 		// IE
-//		System.setProperty("webdriver.ie.driver", ".\\driver\\IEDriverServer.exe");
-//		driver = new InternetExplorerDriver();
+		System.setProperty("webdriver.ie.driver", ".\\driver\\IEDriverServer.exe");
+		driver = new InternetExplorerDriver();
 
 		jsExecutor = (JavascriptExecutor) driver;
 		waitExplicit = new WebDriverWait(driver, 60);
@@ -264,17 +264,27 @@ public class Topic_11_UploadFile {
 //		Step 04 - Input random folder to 'New subfolder? Name:) textbox (Ex: dam1254353)
 		WebElement subfolder = driver.findElement(By.xpath("//input[@id='newsubdir1']"));
 		subfolder.sendKeys(subFolderName);
+		Thread.sleep(1000);
 		
 //		Step 05 - Input email and firstname (dam@gmail.com/ DAM DAO)
 		WebElement emailTextbox = driver.findElement(By.xpath("//input[@name='email_address']"));
+		emailTextbox.clear();
 		emailTextbox.sendKeys(email);
 		
+		
 		WebElement firstnameTextbox = driver.findElement(By.xpath("//input[@name='first_name']"));
+		firstnameTextbox.clear();
 		firstnameTextbox.sendKeys(firstName);
+		Thread.sleep(1000);
 		
 //		Step 06 - Click Begin Upload (Note: Wait for page load successfully)
 		WebElement uploadBtn = driver.findElement(By.xpath("//input[@id='uploadbutton']"));
-		uploadBtn.click();
+		
+		if(driver.toString().contains("internet explorer")) {
+			clickToElementByJS(uploadBtn);
+		}else {
+			uploadBtn.click();
+		}	
 		Thread.sleep(5000);
 		
 //		Step 07 - Verify information
@@ -287,7 +297,11 @@ public class Topic_11_UploadFile {
 		
 //		Step 08 - Click 'View Uploaded Files' link
 		WebElement viewUploadLink = driver.findElement(By.xpath("//a[contains(text(),'View Uploaded Files')]"));
-		viewUploadLink.click();
+		if(driver.toString().contains("internet explorer")) {
+			clickToElementByJS(viewUploadLink);
+		}else {
+			viewUploadLink.click();
+		}	
 		Thread.sleep(2000);
 		
 //		Step 09 - Click to random folder (Ex: dam1254353)

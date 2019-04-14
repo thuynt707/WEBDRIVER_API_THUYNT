@@ -50,16 +50,16 @@ public class Topic_11_UploadFile {
 	@BeforeTest
 	public void beforeTest() {
 		// Chrome
-//		System.setProperty("webdriver.chrome.driver", ".\\driver\\chromedriver.exe");
-//		driver = new ChromeDriver();
+		System.setProperty("webdriver.chrome.driver", ".\\driver\\chromedriver.exe");
+		driver = new ChromeDriver();
 
 		// Firefox
 //		System.setProperty("webdriver.gecko.driver", ".\\driver\\geckodriver.exe");
 //		driver = new FirefoxDriver();
 
 		// IE
-		System.setProperty("webdriver.ie.driver", ".\\driver\\IEDriverServer.exe");
-		driver = new InternetExplorerDriver();
+//		System.setProperty("webdriver.ie.driver", ".\\driver\\IEDriverServer.exe");
+//		driver = new InternetExplorerDriver();
 
 		jsExecutor = (JavascriptExecutor) driver;
 		waitExplicit = new WebDriverWait(driver, 60);
